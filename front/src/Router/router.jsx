@@ -1,4 +1,5 @@
 import Layout from "../Compenent/Admin/Layout";
+import CreateExamForm from "../Compenent/Admin/Pages/Exam/CreateExamForm";
 import AllGroups from "../Compenent/Admin/Pages/Group/AllGroups";
 import CreateGroupForm from "../Compenent/Admin/Pages/Group/CreateGroupForm";
 import GroupWithProfs from "../Compenent/Admin/Pages/Group/GroupWithProfs";
@@ -50,6 +51,12 @@ export const router = createBrowserRouter([
       element: <CreateGroupForm />,
     },
 
+
+
+    {
+      path: "exams/add",
+      element: <CreateExamForm />,
+    },
     
     
 
