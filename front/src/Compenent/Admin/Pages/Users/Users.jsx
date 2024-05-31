@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../../Layout';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import {fetchDataAllAdmin} from "../../../../api/Admin/AdminCrud"
 
 const Dropdown = ({ options }) => (
   <div className="relative">
@@ -32,9 +34,7 @@ const UserRow = ({ user }) => (
   <tr>
     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
       <div className="flex items-center">
-        <div className="flex-shrink-0 w-10 h-10">
-          <img className="w-full h-full rounded-full" src={user.imgSrc} alt="" />
-        </div>
+        
         <div className="ml-3">
           <p className="text-gray-900 whitespace-no-wrap">{user.name}</p>
         </div>
@@ -44,7 +44,7 @@ const UserRow = ({ user }) => (
       <p className="text-gray-900 whitespace-no-wrap">{user.role}</p>
     </td>
     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-      <p className="text-gray-900 whitespace-no-wrap">{user.createdAt}</p>
+      <p className="text-gray-900 whitespace-no-wrap">{user.email}</p>
     </td>
     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
       <span className={`relative inline-block px-3 py-1 font-semibold leading-tight text-${user.idColor}-900`}>
@@ -53,10 +53,10 @@ const UserRow = ({ user }) => (
         <Link 
         className="rounded-md  bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
          to={`/update/${user.id}`}
-          >remove</Link>
+          >edit</Link>
         <Link
-        className="rounded-md mx-2 bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        to={`/remove/${user.id}`} >edit</Link>
+        className="rounded-md mx-2 bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        to={`/remove/${user.id}`} >Remove</Link>
         </div>
       </span>
     </td>
@@ -75,10 +75,10 @@ const UserTable = ({ users }) => (
             Role
           </th>
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Created at
+            email
           </th>
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Action
+            
           </th>
         </tr>
       </thead>
@@ -106,23 +106,23 @@ const  Users= () => {
     {
       name: "Vera Carpenter",
       role: "Admin",
-      createdAt: "Jan 21, 2020",
+      email: "Jan 21, 2020",
       id: 1,
       idColor: "green",
       imgSrc: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80",
     },
     {
       name: "Blake Bowman",
-      role: "Editor",
-      createdAt: "Jan 01, 2020",
+      role: "Admin",
+      email: "Jan 01, 2020",
       id: 1,
       idColor: "green",
       imgSrc: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80",
     },
     {
       name: "Dana Moore",
-      role: "Editor",
-      createdAt: "Jan 10, 2020",
+      role: "Admin",
+      email: "Jan 10, 2020",
       id: "Suspended",
       idColor: "orange",
       imgSrc: "https://images.unsplash.com/photo-1540845511934-7721dd7adec3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80",
@@ -130,12 +130,31 @@ const  Users= () => {
     {
       name: "Alonzo Cox",
       role: "Admin",
-      createdAt: "Jan 18, 2020",
+      email: "Jan 18, 2020",
       id: 1,
       idColor: "red",
       imgSrc: "https://images.unsplash.com/photo-1522609925277-66fea332c575?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80",
     },
   ];
+
+  const [AllAdmins,setAllAdmins] = useState()
+
+const navigate = useNavigate()
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if(token ==="")
+      navigate('/NotFound')
+    const fetchUsers = async () => {
+      try {
+        const data = await fetchDataAllAdmin();
+        setAllAdmins(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   return (
    <Layout>
@@ -143,7 +162,7 @@ const  Users= () => {
       <div className="container mx-auto px-4 sm:px-8">
         <div className="py-8">
           <div>
-            <h2 className="text-2xl font-semibold leading-tight">Users</h2>
+            <h2 className="text-2xl font-semibold leading-tight">Admins</h2>
           </div>
           <div className="my-2 flex sm:flex-row flex-col">
             <div className="flex flex-row mb-1 sm:mb-0">
@@ -151,7 +170,12 @@ const  Users= () => {
               <Dropdown options={['All', 1, 'I1']} />
             </div>
             <SearchInput />
-            
+            <Link 
+                className="rounded-md ml-2 bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                to={`/admin/creaet`}
+              >
+                Add new Admin
+              </Link>
           </div>
           <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
             <UserTable users={users} />

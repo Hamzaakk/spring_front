@@ -1,48 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../../Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { fetchGrou } from "../../../../api/Group/GroupApi";
 
 const AllGroups = () => {
-  // State to hold department data
-  const [groupsData, setGroupsData] = useState([
-    {
-      id: 1,
-      group_name: "Math Informatique",
-    },
-    {
-      id: 2,
-      group_name: "Mecanique et Electrique",
-    },
-    {
-      id: 3,
-      group_name: "Civil et Eau Envirenement",
-    },
-    {
-      id: 3,
-      group_name: "Civil et Eau Envirenement",
-    },
-    {
-      id: 3,
-      group_name: "Civil et Eau Envirenement",
-    },
-    {
-      id: 3,
-      group_name: "Civil et Eau Envirenement",
-    },
-    {
-      id: 3,
-      group_name: "Civil et Eau Envirenement",
-    },
-    // Add more department data as needed
-  ]);
+  const [groupsData, setGroupsData] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      navigate('/');
+    }
+
+    const fetchGroups = async () => {
+      try {
+        const data = await fetchGrou();
+        setGroupsData(data);
+      } catch (error) {
+        console.error('Error fetching group data:', error);
+      }
+    };
+
+    fetchGroups();
+  }, [navigate]);
 
   return (
     <Layout>
-      <Link
-        className="rounded-md p-3  bg-sky-500  text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      <Link 
+        className="hover:bg-indigo-500 "
         to={`/groups/group/add`}
       >
-        new group profs{" "}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="size-6 bg-indigo-500 text-white"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 10.5v6m3-3H9m4.06-7.19-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"
+          />
+        </svg>
       </Link>
       <div className="flex flex-wrap py-2 bg-slate-100 mx-8 ">
         {groupsData.map((group) => (
@@ -61,8 +63,7 @@ const AllGroups = () => {
               <div className="mb-3 flex items-center justify-between px-1 md:items-start">
                 <div className="mb-2">
                   <p className="text-lg font-bold text-navy-700">
-                    {" "}
-                    {group.group_name}{" "}
+                    {group.group_name}
                   </p>
                 </div>
               </div>
