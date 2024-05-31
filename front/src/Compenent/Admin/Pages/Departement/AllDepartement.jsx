@@ -44,7 +44,7 @@ const DepartmentRow = ({ department }) => (
       <div className="flex">
         <Link 
           className="rounded-md ml-2 bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-          to={`/departments/edit/${department.id}`}
+          to={`/departments`}
         >
           Edit
         </Link>

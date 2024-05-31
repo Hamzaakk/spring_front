@@ -8,7 +8,7 @@ export const fetchData = async () => {
 
     // Make the request with the Authorization header
     const response = await axios.get(
-      "http://localhost:8080/api/professor/all",
+      "http://localhost:8080/api/auth/professors",
       {
         headers: {
           Authorization: `Bearer ${token}`,

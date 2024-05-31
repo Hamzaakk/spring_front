@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../Layout';
 import { Link, useNavigate } from 'react-router-dom';
-
-import {fetchDataAllAdmin} from "../../../../api/Admin/AdminCrud"
+import axios from 'axios';
 
 const Dropdown = ({ options }) => (
   <div className="relative">
@@ -34,31 +33,24 @@ const UserRow = ({ user }) => (
   <tr>
     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
       <div className="flex items-center">
-        
         <div className="ml-3">
-          <p className="text-gray-900 whitespace-no-wrap">{user.name}</p>
+          <p className="text-gray-900 whitespace-no-wrap">{user.firstName} {user.lastName}</p>
         </div>
       </div>
-    </td>
-    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-      <p className="text-gray-900 whitespace-no-wrap">{user.role}</p>
     </td>
     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
       <p className="text-gray-900 whitespace-no-wrap">{user.email}</p>
     </td>
     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-      <span className={`relative inline-block px-3 py-1 font-semibold leading-tight text-${user.idColor}-900`}>
-        <span aria-hidden className={`absolute inset-0 bg-${user.idColor}-200 opacity-50 rounded-full`}></span>
       <div className="flex ">
-        <Link 
-        className="rounded-md  bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-         to={`/update/${user.id}`}
-          >edit</Link>
+        
         <Link
-        className="rounded-md mx-2 bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        to={`/remove/${user.id}`} >Remove</Link>
-        </div>
-      </span>
+          className="rounded-md mx-2 bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+          to={`/remove/${user.id}`}
+        >
+          Remove
+        </Link>
+      </div>
     </td>
   </tr>
 );
@@ -69,22 +61,18 @@ const UserTable = ({ users }) => (
       <thead>
         <tr>
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            User
+            Name
           </th>
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Role
+            Email
           </th>
           <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            email
-          </th>
-          <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            
           </th>
         </tr>
       </thead>
       <tbody>
         {users.map(user => (
-          <UserRow key={user.name} user={user} />
+          <UserRow key={user.id} user={user} />
         ))}
       </tbody>
     </table>
@@ -101,90 +89,62 @@ const Pagination = () => (
   </div>
 );
 
-const  Users= () => {
-  const users = [
-    {
-      name: "Vera Carpenter",
-      role: "Admin",
-      email: "Jan 21, 2020",
-      id: 1,
-      idColor: "green",
-      imgSrc: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80",
-    },
-    {
-      name: "Blake Bowman",
-      role: "Admin",
-      email: "Jan 01, 2020",
-      id: 1,
-      idColor: "green",
-      imgSrc: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80",
-    },
-    {
-      name: "Dana Moore",
-      role: "Admin",
-      email: "Jan 10, 2020",
-      id: "Suspended",
-      idColor: "orange",
-      imgSrc: "https://images.unsplash.com/photo-1540845511934-7721dd7adec3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80",
-    },
-    {
-      name: "Alonzo Cox",
-      role: "Admin",
-      email: "Jan 18, 2020",
-      id: 1,
-      idColor: "red",
-      imgSrc: "https://images.unsplash.com/photo-1522609925277-66fea332c575?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.2&w=160&h=160&q=80",
-    },
-  ];
+const Users = () => {
+  const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
 
-  const [AllAdmins,setAllAdmins] = useState()
-
-const navigate = useNavigate()
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    if(token ==="")
-      navigate('/NotFound')
     const fetchUsers = async () => {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        navigate('/NotFound');
+        return;
+      }
+
       try {
-        const data = await fetchDataAllAdmin();
-        setAllAdmins(data);
+        const response = await axios.get('http://localhost:8080/api/auth/admins', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setUsers(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [navigate]);
 
   return (
-   <Layout>
-     <div className="antialiased font-sans">
-      <div className="container mx-auto px-4 sm:px-8">
-        <div className="py-8">
-          <div>
-            <h2 className="text-2xl font-semibold leading-tight">Admins</h2>
-          </div>
-          <div className="my-2 flex sm:flex-row flex-col">
-            <div className="flex flex-row mb-1 sm:mb-0">
-              <Dropdown options={['5', '10', '20']} />
-              <Dropdown options={['All', 1, 'I1']} />
+    <Layout>
+      <div className="antialiased font-sans">
+        <div className="container mx-auto px-4 sm:px-8">
+          <div className="py-8">
+            <div>
+              <h2 className="text-2xl font-semibold leading-tight">Admins</h2>
             </div>
-            <SearchInput />
-            <Link 
+            <div className="my-2 flex sm:flex-row flex-col">
+              <div className="flex flex-row mb-1 sm:mb-0">
+                <Dropdown options={['5', '10', '20']} />
+                <Dropdown options={['All', 1, 'I1']} />
+              </div>
+              <SearchInput />
+              <Link 
                 className="rounded-md ml-2 bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                 to={`/admin/creaet`}
               >
                 Add new Admin
               </Link>
+            </div>
+            <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+              <UserTable users={users} />
+            </div>
+            <Pagination />
           </div>
-          <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-            <UserTable users={users} />
-          </div>
-          <Pagination />
         </div>
       </div>
-    </div>
-   </Layout>
+    </Layout>
   );
 };
 

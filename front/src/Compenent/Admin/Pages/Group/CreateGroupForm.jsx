@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../Layout';
 import axios from 'axios';
+import {  useNavigate } from 'react-router-dom';
 
 const CreateGroupForm = () => {
-  // Mock data for professors (replace with actual data from API or props)
   const [professors, setProfessors] = useState([]);
+  const [formData, setFormData] = useState({
+    groupName: '',
+    professorIds: [],
+  });
+  const history = useNavigate();
 
   useEffect(() => {
     fetchData();
@@ -12,10 +17,7 @@ const CreateGroupForm = () => {
 
   const fetchData = async () => {
     try {
-      // Retrieve the token from local storage
       const token = localStorage.getItem('access_token');
-
-      // Make the request with the Authorization header
       const response = await axios.get('http://localhost:8080/api/professor/all', {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -23,41 +25,40 @@ const CreateGroupForm = () => {
       });
 
       setProfessors(response.data);
-
-      // Log and return the fetched data
       console.log('Data fetched successfully:', response.data);
-      return response.data;
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
-  const [formData, setFormData] = useState({
-    groupName: '',
-    professorIds: [], // For storing selected professor IDs
-  });
-
   const handleChange = (e) => {
-    const { name, options } = e.target;
-    const selectedIds = Array.from(options)
-      .filter((option) => option.selected)
-      .map((option) => option.value);
-    setFormData({
-      ...formData,
-      [name]: selectedIds,
-    });
+    const { name, value, options } = e.target;
+    if (name === 'professorIds') {
+      const selectedIds = Array.from(options)
+        .filter(option => option.selected)
+        .map(option => option.value);
+      setFormData({
+        ...formData,
+        [name]: selectedIds,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Retrieve the token from local storage
       const token = localStorage.getItem('access_token');
-
-      // Make the request with the Authorization header
       const response = await axios.post(
         'http://localhost:8080/api/group/create',
-        formData,
+        {
+          name: formData.groupName,
+          profIds: formData.professorIds.map(id => parseInt(id)),
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,12 +66,14 @@ const CreateGroupForm = () => {
         }
       );
 
-      // Log the response
+      console.log( {
+        name: formData.groupName,
+        profIds: formData.professorIds.map(id => parseInt(id, 10)),
+      })
       console.log('Group created successfully:', response.data);
-      // Handle success, e.g., redirect to another page
+      history('/success'); // Redirect to modules page after success
     } catch (error) {
       console.error('Error creating group:', error);
-      // Handle error, e.g., show error message to the user
     }
   };
 
@@ -91,7 +94,7 @@ const CreateGroupForm = () => {
                 id="groupName"
                 placeholder="Group Name"
                 value={formData.groupName}
-                onChange={(e) => setFormData({ ...formData, groupName: e.target.value })}
+                onChange={handleChange}
               />
             </div>
             <div>

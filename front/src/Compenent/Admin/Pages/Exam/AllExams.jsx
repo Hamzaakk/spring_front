@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../Layout";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 const ExamCard = ({
   elementPedagogique,
@@ -66,11 +67,8 @@ const ExamCard = ({
             <p>Session: {session}</p>
           </div>
         </div>
-        <button  className="mt-4 text-xl w-full text-white bg-indigo-600 py-2 rounded-xl shadow-lg">
-         <Link to={`exam/detail/1`}>
-         {buttonText}
-         </Link>
-         
+        <button className="mt-4 text-xl w-full text-white bg-indigo-600 py-2 rounded-xl shadow-lg">
+          <Link to={`exam/detail/1`}>{buttonText}</Link>
         </button>
       </div>
     </div>
@@ -78,6 +76,26 @@ const ExamCard = ({
 };
 
 const AllExams = () => {
+  const [exams, setExams] = useState([]);
+
+  useEffect(() => {
+    const fetchExams = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+        const response = await axios.get("http://localhost:8080/api/exam/exams", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setExams(response.data);
+      } catch (error) {
+        console.error("Error fetching exam data:", error);
+      }
+    };
+
+    fetchExams();
+  }, []);
+
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-tr from-red-300 to-yellow-200 flex justify-center items-center py-20">
@@ -101,33 +119,18 @@ const AllExams = () => {
           </svg>
         </Link>
         <div className="md:px-4 md:grid md:grid-cols-2 lg:grid-cols-3 gap-5 space-y-4 md:space-y-0">
-          <ExamCard
-            elementPedagogique="Mathematics"
-            startDate="2024-06-01"
-            startTime="10:00 AM"
-            duration="2 Hours"
-            session="Normal"
-            image="https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
-            buttonText="More Info"
-          />
-          <ExamCard
-            elementPedagogique="Physics"
-            startDate="2024-06-02"
-            startTime="1:00 PM"
-            duration="3 Hours"
-            session="Rattrapage"
-            image="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80"
-            buttonText="More Info"
-          />
-          <ExamCard
-            elementPedagogique="Chemistry"
-            startDate="2024-06-03"
-            startTime="9:00 AM"
-            duration="1.5 Hours"
-            session="Normal"
-            image="https://images.unsplash.com/photo-1561835491-ed2567d96913?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80"
-            buttonText="More Info"
-          />
+          {exams.map((exam) => (
+            <ExamCard
+              key={exam.startDate}
+              elementPedagogique={exam.examTitle}
+              startDate={new Date(exam.startDate).toLocaleDateString()}
+              startTime={new Date(exam.startDate).toLocaleTimeString()}
+              duration={`${exam.defaultTime} hours`}
+              session={exam.year}
+              image="https://images.unsplash.com/photo-1561835491-ed2567d96913?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80"
+              buttonText="More Info"
+            />
+          ))}
         </div>
       </div>
     </Layout>

@@ -20,6 +20,7 @@ import Users from "../Compenent/Admin/Pages/Users/Users";
 import Login from "../Compenent/Auth/Login";
 import { createBrowserRouter } from "react-router-dom";
 import SuccessOperation from "../Compenent/Utilites/SuccessOperation";
+import ExamDetails from "../Compenent/Admin/Pages/Exam/ExamDetails";
 
 export const router = createBrowserRouter([
   {
@@ -93,6 +94,11 @@ export const router = createBrowserRouter([
   },
 
   {
+    path : "/allExams/exam/detail/:id",
+    element : <ExamDetails/>,
+  },
+
+  {
     path: "test",
     element: <Monitoring />,
   },
@@ -124,3 +130,26 @@ export const router = createBrowserRouter([
     element :<SuccessOperation/>
   }
 ]);
+
+
+
+
+// import React from 'react';
+
+// const ModulesCard = ({ title, prof_coordinateur, prof_ensg }) => {
+//   return (
+//     <div className="max-w-sm bg-white px-6 pt-6 pb-2 rounded-xl shadow-lg transform hover:scale-105 transition duration-500">
+//       <h3 className="mb-3 text-xl font-bold text-indigo-600">{title}</h3>
+//       <div className="mt-4 text-gray-800">
+//         <p className="text-lg font-bold">Coordinator:</p>
+//         <p>{prof_coordinateur.firstName} {prof_coordinateur.lastName}</p>
+//         <p>{prof_coordinateur.email}</p>
+//         <p className="text-lg font-bold mt-4">Professor:</p>
+//         <p>{prof_ensg.firstName} {prof_ensg.lastName}</p>
+//         <p>{prof_ensg.email}</p>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ModulesCard;

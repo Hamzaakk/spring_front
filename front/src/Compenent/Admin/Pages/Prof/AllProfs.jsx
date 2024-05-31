@@ -73,7 +73,7 @@ const handelRemove = async (id) => {
   if (window.confirm("Are you sure?")) {
     try {
       const token = localStorage.getItem('access_token');
-      const response = await axios.delete(`http://localhost:8080/api/professor/${id}`, {
+      const response = await axios.delete(`http://localhost:8080/api/auth/professors/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
