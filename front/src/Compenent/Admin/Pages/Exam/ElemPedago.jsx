@@ -89,7 +89,7 @@ import axios from 'axios';
               <div className="flex items-center justify-between md:items-center lg:justify-between">
                 <Link
                   className="rounded-md flex justify-center  bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  to={`/exams/departement/${params.id}/${params.idfil}/${elem.id}`}
+                  to={`/exams/departement/${params.id}/${params.idfil}/${elem.id}/${elem.idType}`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

@@ -1,18 +1,41 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../Layout";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
+import {fetchGrou} from "../../../../api/Group/GroupApi"
 const CreateExamForm = () => {
   const params = useParams();
   const [formData, setFormData] = useState({
     startDate: "",
-    time: "",
-    examTypeId: "",
+    examTypeId: params.idType,
+    year: "",
     sessionId: "",
-    pedagogicalElementId: "",
+    pedagogicalElementId: params.idel,
     monitoringList: [],
   });
+
+  const [groupsData, setGroupsData] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      navigate('/');
+    }
+
+    const fetchGroups = async () => {
+      try {
+        const data = await fetchGrou();
+        setGroupsData(data);
+      } catch (error) {
+        console.error('Error fetching group data:', error);
+      }
+    };
+
+    fetchGroups();
+  }, []);
+
 
   const [sessions] = useState([
     { id: 1, name: "Normale" },
@@ -20,10 +43,7 @@ const CreateExamForm = () => {
   ]);
 
   const [rooms, setRooms] = useState([]);
-  const [groups] = useState([
-    { id: 1, name: "A" },
-    { id: 2, name: "B" },
-  ]);
+ 
 
   useEffect(() => {
     fetchRooms();
@@ -64,7 +84,7 @@ const CreateExamForm = () => {
         {
           roomId: "",
           groupId: "",
-          nomberSupervised: "",
+          profNumber: 0,
         },
       ],
     });
@@ -79,11 +99,25 @@ const CreateExamForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData); // For testing purposes
     // Call onSubmit with form data
     // onSubmit(formData);
+
+
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await axios.post('http://localhost:8080/api/exam/create', formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      console.log('exam created successfully:', response.data);
+      navigate('/success'); // Redirect to success page or show a success message
+    } catch (error) {
+      console.error('Error creating exam:', error);
+    }
   };
 
   const getFilteredRooms = (index) => {
@@ -99,7 +133,7 @@ const CreateExamForm = () => {
     const selectedGroups = formData.monitoringList
       .filter((_, i) => i !== index)
       .map((monitoring) => monitoring.groupId);
-    return groups.filter(
+    return groupsData.filter(
       (group) => !selectedGroups.includes(group.id.toString())
     );
   };
@@ -113,7 +147,7 @@ const CreateExamForm = () => {
             onSubmit={handleSubmit}
           >
             <h1 className="text-center text-2xl mb-6 text-gray-600 font-bold font-sans">
-              Create Exam
+              Create Exam departement id : {params.id}  , filier id : {params.idfil}  , elem id : {params.idel}  
             </h1>
             <div className="flex m-2 flex-wrap">
               <div className="m-2">
@@ -143,14 +177,32 @@ const CreateExamForm = () => {
                 </label>
                 <input
                   className="w-full bg-gray-100 px-4 py-2 rounded-lg focus:outline-none"
-                  type="number"
+                  type="text"
                   name="time"
                   id="time"
-                  value={formData.time}
-                  onChange={(e) =>
-                    setFormData({ ...formData, time: e.target.value })
-                  }
+                  value={params.idType}
+                 
+        
                 />
+                 <div className="m-2">
+                <label
+                  className="text-gray-800 font-semibold block my-3 text-md"
+                  htmlFor="time"
+                >
+                  Year
+                </label>
+                <input
+                  className="w-full bg-gray-100 px-4 py-2 rounded-lg focus:outline-none"
+                  type="text"
+                  name="year"
+                  id="year"
+                  
+                  onChange={(e) =>
+                    setFormData({ ...formData, year: e.target.value })
+                  }
+        
+                />
+              </div>
               </div>
               <div className="m-2">
                 <label
@@ -229,7 +281,7 @@ const CreateExamForm = () => {
                 <input
                   className="w-full bg-gray-100 px-4 py-2 rounded-lg focus:outline-none"
                   type="number"
-                  name="nomberSupervised"
+                  name="profNumber"
                   id={`nomberSupervised_${index}`}
                   value={monitoring.nomberSupervised}
                   onChange={(e) => handleChange(e, index)}

@@ -4,7 +4,7 @@ import Layout from '../../Layout';
 import axios from 'axios';
 
 const GroupWithProfs = () => {
-  const { id } = useParams();
+  const { id , name} = useParams();
 
   // State to hold group data
   const [groupData, setGroupData] = useState(null);
@@ -57,11 +57,11 @@ const GroupWithProfs = () => {
               </div>
               <div className="mb-3 flex items-center justify-between px-1 md:items-start">
                 <div className="mb-2">
-                  <p className="text-lg font-bold text-navy-700"> {groupData.group_name} </p>
+                  <p className="text-lg font-bold text-navy-700"> {name} </p>
                 </div>
               </div>
               <div className="flex flex-col">
-                {groupData.profDtoList.map((professor) => (
+                {groupData.map((professor) => (
                   <div key={professor.id} className="flex items-centerbg p-2 rounded-md bg-white justify-between mb-2">
                     <div>
                       <p className="text-sm font-medium text-gray-600"> {professor.firstName} {professor.lastName} </p>

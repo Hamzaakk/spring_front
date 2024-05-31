@@ -83,7 +83,7 @@ export const router = createBrowserRouter([
   },
 
   {
-    path: "/exams/departement/:id/:idfil/:idel",
+    path: "/exams/departement/:id/:idfil/:idel/:idType",
     element: <CreateExamForm />,
   },
 

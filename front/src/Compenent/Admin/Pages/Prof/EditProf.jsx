@@ -46,17 +46,14 @@ const EditProf = () => {
       firstName: professorData.firstName,
       lastName: professorData.lastName,
       email: professorData.email,
-      fieldId: parseInt(professorData.fieldId)
+     
     };
 
 
     
     try {
       const token = localStorage.getItem('access_token');
-      const response = await axios.put(`http://localhost:8080/api/professor/${id}`, professorInfo, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+      const response = await axios.put(`http://localhost:8080/api/auth/user/${id}`, professorInfo, {
       });
       console.log('Professor created successfully:', response.data);
       navigate('/success'); // Redirect to success page or show a success message
@@ -87,16 +84,7 @@ const EditProf = () => {
               <label className="text-gray-800 font-semibold block my-3 text-md" htmlFor="password">Password</label>
               <input className="w-full bg-gray-100 px-4 py-2 rounded-lg focus:outline-none" type="password" name="password" id="password" placeholder="Password" value={professorData.password} onChange={handleChange} />
             </div>
-            <div>
-              <label className="text-gray-800 font-semibold block my-3 text-md" htmlFor="field">Field</label>
-              <select className="w-full bg-gray-100 px-4 py-2 rounded-lg focus:outline-none" name="fieldId" id="field" value={professorData.fieldId} onChange={handleChange}>
-                <option value="">Select Field</option>
-                {fields.map(field => (
-                  <option key={field.id} value={field.id}>{field.filed_name
-                  }</option>
-                ))}
-              </select>
-            </div>
+          
             <button type="submit" className="w-full mt-6 bg-indigo-600 rounded-lg px-4 py-2 text-lg text-white tracking-wide font-semibold font-sans">Edit</button>
           </form>
         </div>
