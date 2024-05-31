@@ -1,16 +1,40 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import Layout from "../../Layout";
 import { Link, useParams } from "react-router-dom";
 
 import img from "../../../../assets/images/3d-clipboard-with-todo-checklist-paper-green-tick.jpg"
+import axios from 'axios';
 
 
  
 
  const ElemPedago = () => {
 
+  const [element,setElementData] = useState([])
   const params = useParams();
+
+  useEffect(() => {
+    // Fetch department data from backend
+   
+    const fetchElems = async () => {
+      try {
+        const token = localStorage.getItem('access_token');
+        const response = await axios.get(`http://localhost:8080/api/field/${params.idfil}/pedagogical-elements`, {
+          
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        console.log("element :",response.data)
+        setElementData(response.data);
+      } catch (error) {
+        console.error('Error fetching elmes:', error);
+      }
+    };
+
+    fetchElems();
+  }, []); // E
   // State to hold department data
   const [elemData, setElemData] = useState([
     {
@@ -41,7 +65,7 @@ import img from "../../../../assets/images/3d-clipboard-with-todo-checklist-pape
     <Layout>
       
       <div className="flex flex-wrap py-2 bg-slate-100 mx-8 ">
-        {elemData.map((elem) => (
+        {element.map((elem) => (
           <div
             key={elem.id}
             className="z-5 mx-2 relative flex flex-col mt-2 rounded-[20px] max-w-[300px]  bg-clip-border shadow-3xl shadow-shadow-500 flex flex-col w-full p-4 3xl:p-[18px] bg-white"
@@ -58,7 +82,7 @@ import img from "../../../../assets/images/3d-clipboard-with-todo-checklist-pape
                 <div className="mb-2">
                   <p className="text-lg font-bold text-navy-700">
                     {" "}
-                    {elem.elem_name}{" "}
+                    {elem.name}{" "}
                   </p>
                 </div>
               </div>

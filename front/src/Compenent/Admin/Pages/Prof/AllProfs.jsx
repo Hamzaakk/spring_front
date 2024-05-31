@@ -60,7 +60,7 @@ const UserRow = ({ user }) => (
           </Link>
           <a
             className="rounded-md mx-2 bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-            onClick={() => handelRemove(user.id)}
+            onClick={() => AllUsers.handelRemove(user.id)}
           >
             Remove
           </a>
@@ -70,21 +70,7 @@ const UserRow = ({ user }) => (
   </tr>
 );
 
-const handelRemove = async (id) => {
-  if (window.confirm("Are you sure?")) {
-    try {
-      const token = localStorage.getItem('access_token');
-      const response = await axios.delete(`http://localhost:8080/api/admin/profs/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      console.log('Data fetched successfully:', response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }
-};
+
 
 const UserTable = ({ users = [] }) => (
   users.length === 0 ? (
@@ -135,6 +121,24 @@ const AllUsers = () => {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
+
+  const handelRemove = async (id) => {
+    if (window.confirm("Are you sure?")) {
+      try {
+        const token = localStorage.getItem('access_token');
+        const response = await axios.delete(`http://localhost:8080/api/professor/${id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        navigate('/success')
+        console.log('Data fetched successfully:', response.data);
+       
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+  };
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (token ==="") 

@@ -63,14 +63,14 @@ const AllGroups = () => {
               <div className="mb-3 flex items-center justify-between px-1 md:items-start">
                 <div className="mb-2">
                   <p className="text-lg font-bold text-navy-700">
-                    {group.group_name}
+                    {group.name}
                   </p>
                 </div>
               </div>
               <div className="flex items-center justify-between md:items-center lg:justify-between">
                 <Link
                   className="rounded-md flex justify-center  bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  to={`/groups/group/${group.id}`}
+                  to={`/groups/group/${group.name}/${group.id}`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "../../Layout";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const CreateExamForm = () => {
+  const params = useParams();
   const [formData, setFormData] = useState({
     startDate: "",
     time: "",
@@ -16,15 +19,32 @@ const CreateExamForm = () => {
     { id: 2, name: "Rattrapage" },
   ]);
 
-  const [rooms] = useState([
-    { id: 1, name: "Room 1" },
-    { id: 2, name: "Room 2" },
-  ]);
-
+  const [rooms, setRooms] = useState([]);
   const [groups] = useState([
     { id: 1, name: "A" },
     { id: 2, name: "B" },
   ]);
+
+  useEffect(() => {
+    fetchRooms();
+  }, []);
+
+  const fetchRooms = async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await axios.get("http://localhost:8080/api/room/allRooms",
+     {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+     }
+      );
+      setRooms(response.data);
+      console.log("Rooms fetched successfully:", response.data);
+    } catch (error) {
+      console.error("Error fetching rooms:", error);
+    }
+  };
 
   const handleChange = (e, index) => {
     const { name, value } = e.target;

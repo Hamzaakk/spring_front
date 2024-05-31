@@ -18,7 +18,7 @@ import axios from 'axios';
     const fetchDepartments = async () => {
       try {
         const token = localStorage.getItem('access_token');
-        const response = await axios.get('http://localhost:8080/api/admin/departements', {
+        const response = await axios.get(`http://localhost:8080/api/department/${params.id}/fields`, {
        
           headers: {
             'Authorization': `Bearer ${token}`
@@ -57,7 +57,7 @@ import axios from 'axios';
               <div className="mb-3 flex items-center justify-between px-1 md:items-start">
                 <div className="mb-2">
                   <p className="text-lg font-bold text-navy-700">
-                    {filed.departement_name}
+                    {filed.name}
                   </p>
                 </div>
               </div>

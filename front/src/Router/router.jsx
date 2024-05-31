@@ -60,7 +60,7 @@ export const router = createBrowserRouter([
     element: <AllGroups />,
   },
   {
-    path: "/groups/group/:id",
+    path: "/groups/group/:name/:id",
     element: <GroupWithProfs />,
   },
   {

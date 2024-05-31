@@ -3,6 +3,8 @@ import Layout from "../../Layout";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 
+
+import img from "../../../../assets/images/unfocused-restaurant-with-tidy-tables.jpg"
 const CreateExam = () => {
   // State to hold department data
   const [departmentData, setDepartmentData] = useState([]);
@@ -13,7 +15,7 @@ const CreateExam = () => {
     const fetchDepartments = async () => {
       try {
         const token = localStorage.getItem('access_token');
-        const response = await axios.get('http://localhost:8080/api/admin/departements', {
+        const response = await axios.get('http://localhost:8080/api/department/departements', {
        
           headers: {
             'Authorization': `Bearer ${token}`
@@ -40,7 +42,7 @@ const CreateExam = () => {
             <div className="h-full w-full">
               <div className="relative w-full">
                 <img
-                  src="https://horizon-tailwind-react-git-tailwind-components-horizon-ui.vercel.app/static/media/Nft3.3b3e6a4b3ada7618de6c.png"
+                  src={img}
                   className="mb-3 h-full w-full rounded-xl 3xl:h-full 3xl:w-full"
                   alt=""
                 />

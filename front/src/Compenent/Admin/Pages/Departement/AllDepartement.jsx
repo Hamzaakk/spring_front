@@ -3,6 +3,8 @@ import Layout from '../../Layout';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+
+
 const Dropdown = ({ options }) => (
   <div className="relative">
     <select className="appearance-none h-full rounded border block w-full bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
@@ -57,6 +59,9 @@ const DepartmentRow = ({ department }) => (
   </tr>
 );
 
+
+
+
 const handelRemove = async (id) => {
   if (window.confirm("Are you sure?")) {
     try {
@@ -66,6 +71,8 @@ const handelRemove = async (id) => {
           'Authorization': `Bearer ${token}`
         }
       });
+     
+
      
       console.log('Data fetched successfully:', response.data);
     } catch (error) {
@@ -114,8 +121,8 @@ const Pagination = () => (
 
 const AllDepartement = () => {
   const [departments, setDepartments] = useState([]);
+  
   const navigate = useNavigate();
-
   useEffect(() => {
     const token = localStorage.getItem('access_token');
     if (!token) navigate('/notfound');
