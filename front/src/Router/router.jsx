@@ -21,6 +21,7 @@ import Login from "../Compenent/Auth/Login";
 import { createBrowserRouter } from "react-router-dom";
 import SuccessOperation from "../Compenent/Utilites/SuccessOperation";
 import ExamDetails from "../Compenent/Admin/Pages/Exam/ExamDetails";
+import Eroor from "../Compenent/Utilites/Eroor";
 
 export const router = createBrowserRouter([
   {
@@ -40,7 +41,10 @@ export const router = createBrowserRouter([
     path: "/users",
     element: <Users />,
   },
-
+ {
+  path :'/error/:m',
+  element :<Eroor/>
+ },
   {
     path: "/profs",
     element: <AllProfs />,

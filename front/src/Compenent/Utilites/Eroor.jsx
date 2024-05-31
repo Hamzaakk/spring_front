@@ -1,11 +1,14 @@
 import React from "react";
 import Layout from "../Admin/Layout";
+import { useParams } from "react-router-dom";
 
-function SuccessOperation() {
+function Eroor() {
   const handleBackClick = () => {
     window.history.back();
   };
 
+
+  const parms = useParams()
   return (
     <Layout>
       <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -31,10 +34,10 @@ function SuccessOperation() {
             </div>
           </div>
           <h3 className="my-4 text-center text-3xl font-semibold text-gray-700">
-            Congratulations!!!
+            Bad Request!!!
           </h3>
           <p className="w-[230px] text-center font-normal text-gray-600">
-            Your operation has been successfully completed.
+            Erro 404 {parms.m}
           </p>
           <button
             className="mx-auto mt-10 block rounded-xl border-4 border-transparent bg-orange-400 px-6 py-3 text-center text-base font-medium text-orange-100 outline-8 hover:outline hover:duration-300"
@@ -48,4 +51,4 @@ function SuccessOperation() {
   );
 }
 
-export default SuccessOperation;
+export default Eroor;

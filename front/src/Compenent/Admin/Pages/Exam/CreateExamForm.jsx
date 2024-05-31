@@ -117,6 +117,7 @@ const CreateExamForm = () => {
       navigate('/success'); // Redirect to success page or show a success message
     } catch (error) {
       console.error('Error creating exam:', error);
+      navigate(`/eroor/${error.message}`)
     }
   };
 
@@ -147,7 +148,7 @@ const CreateExamForm = () => {
             onSubmit={handleSubmit}
           >
             <h1 className="text-center text-2xl mb-6 text-gray-600 font-bold font-sans">
-              Create Exam departement id : {params.id}  , filier id : {params.idfil}  , elem id : {params.idel}  
+              Create Exam departement 
             </h1>
             <div className="flex m-2 flex-wrap">
               <div className="m-2">

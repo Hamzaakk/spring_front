@@ -42,12 +42,7 @@ const UserRow = ({ user }) => (
     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
       <p className="text-gray-900 whitespace-no-wrap">Prof</p>
     </td>
-    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-      <p className="text-gray-900 whitespace-no-wrap">{user.field_name}</p>
-    </td>
-    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-      <p className="text-gray-900 whitespace-no-wrap">{user.departement_name}</p>
-    </td>
+ 
     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
       <span className={`relative inline-block px-3 py-1 font-semibold leading-tight text-${user.idColor}-900`}>
         <span className={`-0 bg-${user.idColor}-200 opacity-50 rounded-full`}></span>
@@ -104,12 +99,7 @@ const UserTable = ({ users = [] }) => (
             <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
               Role
             </th>
-            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-              Field
-            </th>
-            <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-              Department
-            </th>
+           
             <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"></th>
           </tr>
         </thead>
